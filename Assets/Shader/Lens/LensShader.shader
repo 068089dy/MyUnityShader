@@ -67,13 +67,13 @@ Shader "Unlit/LensShader"
                 // 计算中心的裁剪空间位置
                 // sample the texture
                 float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
-                if (dot(i.normal, viewDir) > 0.9){
+                if (dot(i.normal, viewDir) > 0.8){
                     return fixed4(0, 0, 0, 1);
                 } else {
                     float distance = i.centerClipPos.z;
                     half4 bgcolor = tex2Dproj(_BackgroundTexture, i.grabPos);
                     half2 uv = i.vertex.xy/_ScreenParams.xy;
-                    half2 center = half2(0.5, 0.5);
+                    half2 center = i.centerClipPos.xy;
                     float len = length(uv - center);
                     float rad = 0.5;
                     float dist = 0.5;
@@ -87,9 +87,9 @@ Shader "Unlit/LensShader"
                     //offset = offset * (1-(0.1*rad)/(pow(len, 2)*dist)) + center;
                     bgcolor = tex2D(_BackgroundTexture, offset);
                     if (len * dist < rad) {
-                        return half4( 0, 0, 0, 1 );
+                        //return half4( 0, 0, 0, 1 );
                     }
-                    return bgcolor;
+                    return i.grabPos.y;
                 }
                 return 1;
             }

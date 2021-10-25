@@ -1,16 +1,14 @@
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 Shader "Unlit/OutLineShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _AtmoColor("Atmosphere Color", Color) = (1,1,0,0)
+        _Size("Size", Range(0,1)) = 0.5		//光晕范围
+        _OutLightPow("Falloff", Range(1,10)) = 5		//光晕系数
+		_OutLightStrength("Transparency", Range(5,20)) = 15	//光晕强度
     }
     SubShader
     {
@@ -95,11 +93,15 @@ Shader "Unlit/OutLineShader"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-
+            uniform float4 _AtmoColor;
+            uniform float _Size;
+            uniform float _OutLightPow;
+            uniform float _OutLightStrength;
+            
             v2f vert (appdata v)
             {
                 v2f o;
-                v.vertex = v.vertex + float4(v.normal, 0) * 0.4;
+                v.vertex = v.vertex + float4(v.normal, 0) * _Size;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.viewDir = normalize(o.worldPos.xyz - _WorldSpaceCameraPos.xyz);
@@ -107,14 +109,14 @@ Shader "Unlit/OutLineShader"
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
-
+            
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = fixed4(1, 1, 0, 1);
+                fixed4 col = _AtmoColor;
                 //col.a = dot(i.viewDir, i.normal);
                 float3 viewDir = normalize(i.worldPos.xyz - _WorldSpaceCameraPos.xyz);
-                col.a = pow(saturate(dot(viewDir, i.normal.xyz)), 2) * 2;
+                col.a = pow(saturate(dot(viewDir, i.normal.xyz)), _OutLightPow) * _OutLightStrength;
                 return col;
             }
             ENDCG
