@@ -4,8 +4,12 @@
     <e p="C:\Users\06808\.Rider2019.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\06808\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_MyUnityShader.554308418.00" t="ExcludeRecursive" />
     <e p="D:\UnityProject\MyUnityShader" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Editor" t="Include">
+          <e p="PipelineSelector.cs" t="Include" />
+        </e>
         <e p="Script" t="Include">
           <e p="BuiltinImageEffect" t="Include">
             <e p="ImageEffCameraCom.cs" t="Include" />
@@ -23,6 +27,14 @@
           </e>
           <e p="OutLine" t="Include">
             <e p="OutLineShader.shader" t="Include" />
+          </e>
+          <e p="RayMarching" t="Include">
+            <e p="BlackHoleShader.shader" t="Include" />
+            <e p="SphereRayMarchingShader.cs" t="Include" />
+            <e p="SphereRayMarchingShader.shader" t="Include" />
+            <e p="ToursSDF" t="Include">
+              <e p="TorusSDFShader.shader" t="Include" />
+            </e>
           </e>
           <e p="Test" t="Include">
             <e p="TestShader.shader" t="Include" />

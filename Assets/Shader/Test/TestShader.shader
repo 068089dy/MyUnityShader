@@ -30,6 +30,8 @@ Shader "Unlit/TestShader"
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float4 clipPos : TEXCOORD1;
+                float4 objPos : TEXCOORD2;
             };
 
             sampler2D _MainTex;
@@ -39,6 +41,8 @@ Shader "Unlit/TestShader"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                o.objPos = v.vertex;
+                o.clipPos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
@@ -46,16 +50,10 @@ Shader "Unlit/TestShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                half2 screenuv = i.vertex.xy / _ScreenParams.xy;
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                col.rgb = screenuv.y;
-                //col.gb = 0;
-                if (col.r > 0.5) {
-                    // 剔除当前像素
-                    discard;
-                }
-                return col;
+                half2 screenuv = i.clipPos.xy / _ScreenParams.xy;
+                fixed4 scrnCoord = ComputeScreenPos(UnityWorldToClipPos(fixed4(0,0,0, 1)));
+                half2 screenUV = scrnCoord.xy / scrnCoord.w;
+                return step(0.5,screenUV.x);
             }
             ENDCG
         }
