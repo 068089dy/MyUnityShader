@@ -29,6 +29,9 @@
             <e p="OutLineShader.shader" t="Include" />
           </e>
           <e p="RayMarching" t="Include">
+            <e p="BlackHole" t="Include">
+              <e p="BlackHoleShader.shader" t="Include" />
+            </e>
             <e p="BlackHoleShader.shader" t="Include" />
             <e p="SphereRayMarchingShader.cs" t="Include" />
             <e p="SphereRayMarchingShader.shader" t="Include" />

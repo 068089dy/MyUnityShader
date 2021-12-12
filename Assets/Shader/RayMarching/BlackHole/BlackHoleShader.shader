@@ -1,4 +1,4 @@
-Shader "Unlit/TorusSDF"
+Shader "Unlit/BlackHole"
 {
     Properties
     {
@@ -60,6 +60,16 @@ Shader "Unlit/TorusSDF"
             float sphere_sdf(float3 p, float r){
                 return length(p) - r;
             }
+            
+            float Random2DTo1D(float2 value,float a ,float2 b)
+            {			
+                //avaoid artifacts
+                float2 smallValue = sin(value);
+                //get scalar value from 2d vector	
+                float  random = dot(smallValue,b);
+                random = frac(sin(random) * a);
+                return random;
+            }
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -71,22 +81,47 @@ Shader "Unlit/TorusSDF"
                 
                 float3 origin = i.origin;
                 float3 p = start-origin;
-                int hitToru = 0;
-                int isHit = 0;
+                float dt = cameraDis/500;
+                //dt = Random2DTo1D(p.xz*100, 0.005, 0.3);
+                float hitPan = 0;
+                float hitHole = 0;
+                float3 hitToruP;
+                float3 hitHoleP;
+                float GM = 0.8;
                 for (int i = 0; i < 800; i++){
                     p = start-origin;
-                    float hit = torus_sdf(p*float3(1, 12, 1), 1.5, 0.5);
-                    if (hit < 0.01){
-                        isHit = 1;
+                    float hit = torus_sdf((start-origin)*float3(1, 13, 1), 2, 1);
+                    float hitToru = smoothstep(0, -0.01, hit);
+                    float hitSphere = sphere_sdf((start-origin), 1.1);
+                    if (hitToru > 0 && hitPan < 0.1){
+                        hitPan = 1;
+                        hitToruP = p;
+                    }
+                    
+                    if (hitSphere < 0.01) {
+                        hitHoleP = p;
+                        hitHole = 1;
                         break;
                     }
-                    start += dir * cameraDis* 0.0025;
+                    
+                    
+                    float r2 = dot(p, p);
+                    float3 a = GM/r2*normalize(-p);
+                    dir += a*dt;
+                    
+                    start += dir * dt;
                 }
-                if (isHit == 1){
-                    float v = smoothstep(0, 1, length(p.xz)/2);
-                    float u = (atan2(p.z, p.x)/3.1415 * v) - _Time.y*0.1;
-                    float tx = tex2D(_Noise, float2(u,v)*8).r;
-                    return tx;
+                if (hitHole > 0 && hitPan < 0.1) {
+                    return fixed4(0,0,0,1);
+                }
+                if (hitPan > 0) {
+                    float v = smoothstep(0, 1, length(hitToruP.xz)/4);
+                    float u = (atan2(hitToruP.z, hitToruP.x)/3.1415 * v) - _Time.y;
+                    float tx = tex2D(_Noise, float2(u,v)).r;
+                    torCol = fixed4(1,1,1,tx);
+                    if (hitHole > 0) {
+                        torCol = fixed4(0,0,0,1) * (1 - tx) + fixed4(1, 1, 1, tx) * tx;
+                    }
                 }
                 return torCol;
             }
