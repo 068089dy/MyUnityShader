@@ -92,19 +92,21 @@ Shader "Unlit/BlackHole"
                     p = start-origin;
                     float hit = torus_sdf((start-origin)*float3(1, 13, 1), 2, 1);
                     float hitToru = smoothstep(0, -0.01, hit);
-                    float hitSphere = sphere_sdf((start-origin), 1.1);
-                    if (hitToru > 0 && hitPan < 0.1){
-                        hitPan = 1;
+                    float hitSphere = sphere_sdf((start-origin), 1);
+                    if (hitToru > 0 && hitPan < 0.01){
+                        // 碰到了吸积盘，记录
+                        hitPan = hitToru;
                         hitToruP = p;
                     }
                     
                     if (hitSphere < 0.01) {
+                        // 碰到了黑洞，记录并跳出
                         hitHoleP = p;
                         hitHole = 1;
                         break;
                     }
                     
-                    
+                    // 计算光线弯曲
                     float r2 = dot(p, p);
                     float3 a = GM/r2*normalize(-p);
                     dir += a*dt;
@@ -112,17 +114,24 @@ Shader "Unlit/BlackHole"
                     start += dir * dt;
                 }
                 if (hitHole > 0 && hitPan < 0.1) {
-                    return fixed4(0,0,0,1);
+                    // 碰到了黑洞，没有碰到吸积盘，返回黑色
+                    torCol.a = 1;
+                    return torCol;
                 }
                 if (hitPan > 0) {
+                    // 碰到了吸积盘
                     float v = smoothstep(0, 1, length(hitToruP.xz)/4);
                     float u = (atan2(hitToruP.z, hitToruP.x)/3.1415 * v) - _Time.y;
                     float tx = tex2D(_Noise, float2(u,v)).r;
-                    torCol = fixed4(1,1,1,tx);
+                    torCol = fixed4(0.2,1,1,tx);
                     if (hitHole > 0) {
-                        torCol = fixed4(0,0,0,1) * (1 - tx) + fixed4(1, 1, 1, tx) * tx;
+                        torCol = fixed4(0,0,0,1) * (1 - tx) + fixed4(1, 1, 1, 1) * tx;
                     }
+                    float r2 = dot(hitToruP, hitToruP);
+                    float glow = 1.5/r2;
+                    torCol += glow;
                 }
+                
                 return torCol;
             }
             ENDCG
