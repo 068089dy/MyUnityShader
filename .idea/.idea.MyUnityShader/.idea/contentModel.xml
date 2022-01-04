@@ -16,9 +16,15 @@
           </e>
           <e p="CameraController" t="Include">
             <e p="CameraController.cs" t="Include" />
+            <e p="FrameLimit.cs" t="Include" />
           </e>
         </e>
         <e p="Shader" t="Include">
+          <e p="Bloom" t="Include">
+            <e p="BloomEffect.cs" t="Include" />
+            <e p="BloomShader.shader" t="Include" />
+            <e p="HDRShader.shader" t="Include" />
+          </e>
           <e p="Death" t="Include">
             <e p="DeathShader.shader" t="Include" />
           </e>
@@ -37,6 +43,9 @@
             <e p="SphereRayMarchingShader.shader" t="Include" />
             <e p="ToursSDF" t="Include">
               <e p="TorusSDFShader.shader" t="Include" />
+            </e>
+            <e p="VolumeCloud" t="Include">
+              <e p="NewUnlitShader.shader" t="Include" />
             </e>
           </e>
           <e p="Test" t="Include">
