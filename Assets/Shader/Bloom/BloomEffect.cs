@@ -20,7 +20,7 @@ public class BloomEffect : MonoBehaviour
         RenderTexture tmpSource = RenderTexture.GetTemporary(width, height, 0, source.format);  
         RenderTexture tmpDest = RenderTexture.GetTemporary(width, height, 0, source.format);  
         Graphics.Blit(source, tmpSource);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
             width/=2;
             height/=2;

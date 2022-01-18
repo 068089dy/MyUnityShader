@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Shader/RayMarching/BlackHoleV2/New Scene.unity
+    guid: 05ff3b5627496bf4e8877afd9e1b8cac
   m_configObjects: {}
