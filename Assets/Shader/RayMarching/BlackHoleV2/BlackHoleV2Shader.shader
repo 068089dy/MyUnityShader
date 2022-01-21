@@ -2,11 +2,16 @@ Shader "Unlit/BlackHoleV2Shader"
 {
     Properties
     {
+        // 吸积盘纹理
         _MainTex ("Texture", 2D) = "white" {}
+        // 吸积盘半径
         _AcDiskRadius ("_AcDiskRadius", Float) = 4 
+        // 吸积盘的厚度，0.001效果较佳
         _AcThicknessHalf ("_AcThickness", Float) = 0.001
+        // 黑洞半径
         _BHRadius ("_BHRadius", Float) = 0.5
-        _StepLimit ("_StepLimit", int) = 0
+        // 最大迭代次数
+        _StepLimit ("_StepLimit", int) = 200
     }
     SubShader
     {
@@ -67,20 +72,18 @@ Shader "Unlit/BlackHoleV2Shader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                //fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 col = 0;
                 float3 start = _WorldSpaceCameraPos;
                 float3 ray = normalize(i.worldPos.xyz - _WorldSpaceCameraPos);
                 float3 p = start-i.origin;
 
-                int hitAcFlag = 0; // 是否碰到吸积盘，0表示没有碰到，1表示碰到了一次，2表示碰到后又出来，3表示第二次碰到
+                int hitAcFlag = 0; // 是否碰到吸积盘，0表示没有碰到，1表示碰到了一次，2表示碰到后又穿过，3表示第二次碰到
                 int hitBHFlag = 0;
                 float3 hitBHP;
                 float3 hitBHViewRay;
                 float3 hitAcP;
                 float3 hitAcP2 = float3(0,0,0);
-                float GM = 0.8;
+                float GM = 0.3;
                 for (int j = 0; j < _StepLimit; j++){
                     // 计算是否进入大球
                     float hitAcSphere = sphere_sdf(p, _AcDiskRadius);
@@ -88,78 +91,84 @@ Shader "Unlit/BlackHoleV2Shader"
                         float hitBH = sphere_sdf(p, _BHRadius);
                         float hitRay = abs((p.y)/ray.y);
                         if (hitBHFlag == 0 && hitBH < 0.001) {
-                            //col += fixed4(0,0,0,1);
+                            // 碰到了黑洞
                             hitBHFlag = 1;
                             hitBHP = p;
                             hitBHViewRay = ray;
-                            //return fixed4(0,0,0,1);
                             break;
                         }
                         if (hitAcFlag == 0 && abs(p.y) <= _AcThicknessHalf) {
+                            // 第一次碰到吸积盘
                             hitAcFlag = 1;
                             hitAcP = p;
-                            //return 1;
                         }
                         if (hitAcFlag == 1 && abs(p.y) > _AcThicknessHalf) {
                             // 从吸积盘出来了
                             hitAcFlag = 2;
-                            //hitAcP2 = p;
-                            //return 1;
                         }
                         if (hitAcFlag == 2 && abs(p.y) <= _AcThicknessHalf) {
+                            // 第二次碰到吸积盘
                             hitAcFlag = 3;
                             hitAcP2 = p;
                             break;
                         }
                         // 取最小值步进
                         float curDt = min(hitBH, hitRay);
+                        // 这里如果curDt过大时，会导致弯曲不够正确，所以最大值取到0.1
                         curDt = min(0.1, curDt);
                         if (hitAcFlag == 1){
                             // 第一次进入盘，要出来
                             curDt = max(0.001, curDt); 
                         }
-                        //curDt = 0.01;
                         // 计算光线弯曲
-                        
                         p += curDt * ray;
                         float r2 = dot(p, p);
                         float3 a = GM/r2*normalize(-p);
                         ray += a*curDt;
                         ray = normalize(ray);
                     } else {
-
                         p += hitAcSphere * ray;
                     }
-
-
-                    
-                    
                 }
                 if (hitBHFlag == 1) {
+                    // 碰到了黑洞
                     col = fixed4(0,0,0,1);
-                    //col.rgb = 1-dot(normalize(hitBHP),-hitBHViewRay);
-                    //col.gb = pow(1-abs(hitBHP.y)/_BHRadius, 9)*2;
+                    // 黑洞边缘发光
+                    col.gb = pow(1-dot(normalize(hitBHP),-hitBHViewRay),3)*2;
+                    // 靠近盘的地方发光
+                    col.gb += pow(1-abs(hitBHP.y/_BHRadius),5);
                 }
                 if (hitAcFlag >= 1) {
+                    // 碰到了吸积盘
                     float distH = length(hitAcP.xz);
+                    // 纹理采样坐标
+                    // v是距离中心距离，映射到0～1
+                    // u是弧度值，映射到0～1
                     float v = smoothstep(0, 1, distH/_AcDiskRadius);
-                    float u = (atan2(hitAcP.z, hitAcP.x)/3.1415 * v) - _Time.y;
+                    float u = (atan2(hitAcP.x, hitAcP.z)/UNITY_PI * v)/2 - _Time.y;
                     float tx = tex2D(_MainTex, float2(u,v)).r;
-                    
                     if (hitAcFlag == 3){
+                        // 第二次碰到吸积盘
                         float distH2 = length(hitAcP2.xz);
                         float v2 = smoothstep(0, 1, distH2/_AcDiskRadius);
-                        float u2 = (atan2(hitAcP2.z, hitAcP2.x)/3.1415 * v) - _Time.y;
+                        float u2 = (atan2(hitAcP.x, hitAcP.z)/UNITY_PI * v)/2 - _Time.y;
                         float tx2 = tex2D(_MainTex, float2(u2,v2)).r;
+                        // 两次碰到吸积盘颜色混合
+                        // 第一次碰到的颜色
                         col = col*(1-tx) + fixed4(0,1,1,1)*tx;
-                        col.a = abs(1-distH/_AcDiskRadius)*2;
-                        col.a += tx2*abs(1-distH2/_AcDiskRadius)*2;
-                        //col = fixed4(0,1,1,1)*(tx2+tx)*abs(1-distH2/_AcDiskRadius)*2;
-                        //col.a = abs(1-distH2/_AcDiskRadius)*2;
-                        
+                        col.a *= abs(1-(distH-_BHRadius)/_AcDiskRadius)*5;
+                        // 第二次碰到的颜色
+                        fixed4 col1 = fixed4(0,1,1,1)*tx2;
+                        col1.a *= abs(1-(distH2-_BHRadius)/_AcDiskRadius)*5;
+                        // 混合
+                        col = col1*(1-col.a) + col*col.a;
                     } else {
+                        // 颜色混合
                         col = col*(1-tx) + fixed4(0,1,1,1)*tx;
-                        col.a *= abs(1-distH/_AcDiskRadius)*2;
+                        if (hitBHFlag != 1) {
+                            // 吸积盘越靠外透明度越低
+                            col *= abs(1-(distH-_BHRadius)/_AcDiskRadius)*2;
+                        }
                     }
                 }
                 return col;
