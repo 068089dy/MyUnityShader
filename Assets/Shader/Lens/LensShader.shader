@@ -84,10 +84,10 @@ Shader "Unlit/LensShader"
  
                     offset = offset * (1 - deformation);
                     offset += center;
-                    //offset = offset * (1-(0.1*rad)/(pow(len, 2)*dist)) + center;
+                    offset = offset * (1-(0.1*rad)/(pow(len, 2)*dist)) + center;
                     bgcolor = tex2D(_BackgroundTexture, offset);
                     if (len * dist < rad) {
-                        //return half4( 0, 0, 0, 1 );
+                        return half4( 0, 0, 0, 1 );
                     }
                     return i.grabPos.y;
                 }

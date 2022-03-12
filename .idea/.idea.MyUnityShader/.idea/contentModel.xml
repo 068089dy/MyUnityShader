@@ -39,6 +39,9 @@
               <e p="BlackHoleShader.shader" t="Include" />
             </e>
             <e p="BlackHoleShader.shader" t="Include" />
+            <e p="BlackHoleV2" t="Include">
+              <e p="BlackHoleV2Shader.shader" t="Include" />
+            </e>
             <e p="SphereRayMarchingShader.cs" t="Include" />
             <e p="SphereRayMarchingShader.shader" t="Include" />
             <e p="ToursSDF" t="Include">
@@ -50,6 +53,11 @@
           </e>
           <e p="Test" t="Include">
             <e p="TestShader.shader" t="Include" />
+          </e>
+        </e>
+        <e p="UrpShader" t="Include">
+          <e p="BlackHole" t="Include">
+            <e p="BlackHoleURPShader.shader" t="Include" />
           </e>
         </e>
       </e>

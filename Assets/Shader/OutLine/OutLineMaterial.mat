@@ -67,17 +67,17 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutLightPow: 3.94
-    - _OutLightStrength: 11.6
+    - _OutLightPow: 3.54
+    - _OutLightStrength: 11.9
     - _Parallax: 0.02
-    - _Size: 0.242
+    - _Size: 0.073
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AtmoColor: {r: 1, g: 1, b: 0, a: 0}
+    - _AtmoColor: {r: 1, g: 0.1538538, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

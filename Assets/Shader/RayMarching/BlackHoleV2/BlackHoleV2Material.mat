@@ -80,7 +80,7 @@ Material:
     - _AcDiskRadius: 12.03
     - _AcThicknessHalf: 0.0001
     - _AlphaClip: 0
-    - _BHRadius: 0.18
+    - _BHRadius: 0.5
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
