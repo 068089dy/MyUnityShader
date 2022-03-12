@@ -61,6 +61,7 @@
       <Path>Logs</Path>
       <Path>Temp</Path>
       <Path>UserSettings</Path>
+      <Path>imgs</Path>
       <Path>obj</Path>
     </explicitExcludes>
   </component>
