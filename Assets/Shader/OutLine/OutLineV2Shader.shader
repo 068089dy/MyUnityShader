@@ -59,6 +59,7 @@ Shader "Unlit/OutLineV2Shader"
         Pass
         {
             Cull Front
+            Blend SrcAlpha One
             CGPROGRAM
             
             #pragma vertex vert
@@ -80,6 +81,9 @@ Shader "Unlit/OutLineV2Shader"
                 float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                float4 worldPos : TEXCOORD1;
+                float3 normal: TEXCOORD2;
+                float3 viewDir: TEXCOORD3;
             };
 
             sampler2D _MainTex;
@@ -88,20 +92,28 @@ Shader "Unlit/OutLineV2Shader"
             v2f vert (appdata v)
             {
                 v2f o;
+                
                 // 这里默认物体中心为远点
                 float4 cube_model_center = float4(0,0,0,0);
                 // 用顶点坐标减去物体中心作为法线
                 float3 strange_normal = normalize(v.vertex.xyz - cube_model_center.xyz);
                 // 沿着法线方向扩展
-                v.vertex = v.vertex + float4(strange_normal, 0) * 0.03;
+                v.vertex = v.vertex + float4(strange_normal, 0) * 0.1;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                
+                o.viewDir = normalize(o.worldPos.xyz - _WorldSpaceCameraPos.xyz);
+                o.normal = mul(unity_ObjectToWorld, float4(strange_normal, 0)).xyz;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                return fixed4(1,0,0,1);
+                float4 col = float4(1,0,0,1);
+                //col.a = pow(saturate(dot(i.viewDir, i.normal.xyz)), 20) * 20;
+                return col;
             }
             ENDCG
         }

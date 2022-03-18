@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\06808\.Rider2019.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\06808\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_MyUnityShader.554308418.00" t="ExcludeRecursive" />
-    <e p="D:\UnityProject\MyUnityShader" t="IncludeRecursive">
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_MyUnityShader.-2125086702.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Editor" t="Include">
+          <e p="GenerateLight.cs" t="Include" />
           <e p="PipelineSelector.cs" t="Include" />
         </e>
         <e p="Script" t="Include">
@@ -25,6 +26,10 @@
             <e p="BloomShader.shader" t="Include" />
             <e p="HDRShader.shader" t="Include" />
           </e>
+          <e p="Blur" t="Include">
+            <e p="BlurShader.shader" t="Include" />
+            <e p="OneObjectBlurShader.shader" t="Include" />
+          </e>
           <e p="Death" t="Include">
             <e p="DeathShader.shader" t="Include" />
           </e>
@@ -33,12 +38,16 @@
           </e>
           <e p="OutLine" t="Include">
             <e p="OutLineShader.shader" t="Include" />
+            <e p="OutLineV2Shader.shader" t="Include" />
           </e>
           <e p="RayMarching" t="Include">
             <e p="BlackHole" t="Include">
               <e p="BlackHoleShader.shader" t="Include" />
             </e>
             <e p="BlackHoleShader.shader" t="Include" />
+            <e p="BlackHoleV2" t="Include">
+              <e p="BlackHoleV2Shader.shader" t="Include" />
+            </e>
             <e p="SphereRayMarchingShader.cs" t="Include" />
             <e p="SphereRayMarchingShader.shader" t="Include" />
             <e p="ToursSDF" t="Include">
@@ -52,11 +61,16 @@
             <e p="TestShader.shader" t="Include" />
           </e>
         </e>
+        <e p="UrpShader" t="Include">
+          <e p="BlackHole" t="Include">
+            <e p="BlackHoleURPShader.shader" t="Include" />
+          </e>
+        </e>
       </e>
       <e p="MyUnityShader.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
-      <e p="Temp\Bin" t="ExcludeRecursive" />
+      <e p="Temp/Bin" t="ExcludeRecursive" />
     </e>
   </component>
 </project>

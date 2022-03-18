@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutLineV2Material
-  m_Shader: {fileID: 4800000, guid: a80f718aaa7ae4dc586371eb6d94d1b3, type: 3}
+  m_Name: OneObjectBlurMaterial
+  m_Shader: {fileID: 4800000, guid: d7353e2d57bb74b8dbe8afbc27826906, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Shader/RayMarching/BlackHoleV2/New Scene.unity
     guid: 05ff3b5627496bf4e8877afd9e1b8cac
+  - enabled: 1
+    path: Assets/Shader/RayMarching/VolumeCloud/VolumnScene.unity
+    guid: 2ad8699b7452e2f46b9efeb25d0de325
   m_configObjects: {}
